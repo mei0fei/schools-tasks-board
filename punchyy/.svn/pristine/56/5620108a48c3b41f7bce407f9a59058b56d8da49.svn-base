@@ -1,0 +1,13 @@
+package com.etc.punchyy.daoimpl;
+
+public class MissionDaoImpl {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

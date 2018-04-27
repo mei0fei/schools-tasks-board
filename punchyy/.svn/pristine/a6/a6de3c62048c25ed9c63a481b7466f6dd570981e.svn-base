@@ -1,0 +1,27 @@
+package com.etc.punchyy.tset;
+
+import java.util.Scanner;
+
+import com.etc.punchyy.biz.UserBiz;
+import com.etc.punchyy.bizimpl.UserBizImpl;
+
+public class Test {
+
+	public static void main(String[] args) {
+		
+		UserBiz biz=new UserBizImpl();
+		
+		Scanner s=new Scanner(System.in);
+		
+		System.out.println("«Î ‰»Îid");
+		int id=s.nextInt();
+		System.out.println("«Î ‰»Î√‹¬Î");
+		String pwd=s.next();
+		
+		if(biz.login(id, pwd)!=null){
+			System.out.println("µ«¬Ω≥…π¶");
+		}else{
+			System.out.println("µ«¬º ß∞‹");
+		}
+	}
+}

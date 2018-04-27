@@ -1,0 +1,184 @@
+package com.etc.punchyy.gui;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+
+import com.etc.punchyy.entity.User;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.Font;
+
+public class Complain extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField Badid;  //被投诉人的ID
+	private JTextField Misid;  //被投诉单的ID
+	private JTextField Reason;  //投诉详情
+	private JLabel Badidhit,Misidhit,Reasonhit;//被投诉人ID，投诉ID，详情的提示框
+	private JButton home,OjbK;//返回主界面，提交按钮,
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Complain frame = new Complain();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public Complain() {
+		setTitle("投诉");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		Badid = new JTextField();
+		Badid.setBounds(89, 10, 128, 21);
+		Badid.addFocusListener(new FocusListener(){
+			User user=new User();
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				if(Badid.getText()==String.valueOf(user.getUser_id())){
+				Badidhit.setText("");
+			return;
+				}
+			}
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				Badidhit.setText("");
+				if(Badid.getText()==null||Badid.getText().equals("")){
+					Badidhit.setText("被投诉人ID不能为空");
+				}else{
+				if(Badid.getText()!=String.valueOf(user.getUser_id())){
+					Badidhit.setText("此用户ID不存在");
+					return;
+				}
+				
+			}
+			}
+		});
+		contentPane.add(Badid);
+		Badid.setColumns(10);
+		
+		JLabel lblNewLabel = new JLabel("被投诉人");
+		lblNewLabel.setBounds(22, 13, 54, 15);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("投诉单号");
+		lblNewLabel_1.setBounds(254, 13, 54, 15);
+		contentPane.add(lblNewLabel_1);
+		
+		Misid = new JTextField();
+		Misid.setBounds(308, 10, 103, 21);
+		Misid.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent arg0) {
+			Misidhit.setText("");
+			return;	
+			}
+			
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				Misidhit.setText("");
+				if(Misid.getText()==null||Misid.getText().equals("")){
+					Misidhit.setText("投诉单号不能为空");
+					return;
+			}
+		}
+			});
+		contentPane.add(Misid);
+		Misid.setColumns(10);
+		
+		JLabel lblNewLabel_2 = new JLabel("反馈详情");
+		lblNewLabel_2.setBounds(22, 52, 70, 15);
+		contentPane.add(lblNewLabel_2);
+		
+		Reason = new JTextField();
+		Reason.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+            Reasonhit.setText("");
+					return;
+				}
+			
+			
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				Reasonhit.setText("");
+				if(Reason.getText()==null||Reason.getText().equals("")){
+					Reasonhit.setText("详情不能为空");
+					return;
+				
+			}
+		}
+		});
+		Reason.setBounds(22, 77, 389, 137);
+		contentPane.add(Reason);
+		Reason.setColumns(10);
+		
+		OjbK = new JButton("提交");
+		OjbK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane.showMessageDialog(Complain.this, "提交成功");
+			}
+		});
+		OjbK.setBounds(72, 237, 93, 23);
+		contentPane.add(OjbK);
+		
+	    home = new JButton("返回主界面");
+		home.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Home home=new Home(null);
+				home.setVisible(true);
+				Complain.this.dispose();
+			}
+		});
+		home.setBounds(265, 237, 116, 23);
+		contentPane.add(home);
+		
+		Badidhit = new JLabel("");
+		Badidhit.setFont(new Font("宋体", Font.PLAIN, 14));
+		Badidhit.setForeground(Color.RED);
+		Badidhit.setBounds(89, 33, 128, 15);
+		contentPane.add(Badidhit);
+		
+		Misidhit = new JLabel("");
+		Misidhit.setFont(new Font("宋体", Font.PLAIN, 14));
+		Misidhit.setForeground(Color.RED);
+		Misidhit.setBounds(308, 33, 116, 15);
+		contentPane.add(Misidhit);
+		
+		Reasonhit = new JLabel("");
+		Reasonhit.setFont(new Font("宋体", Font.PLAIN, 14));
+		Reasonhit.setForeground(Color.RED);
+		Reasonhit.setBounds(163, 224, 103, 15);
+		contentPane.add(Reasonhit);
+	}
+}

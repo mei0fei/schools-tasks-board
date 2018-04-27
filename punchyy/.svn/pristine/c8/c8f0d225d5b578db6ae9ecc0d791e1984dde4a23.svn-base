@@ -1,0 +1,333 @@
+package com.etc.punchyy.gui;
+
+
+import javax.swing.JFrame;
+
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+
+import com.etc.punchyy.biz.CompBiz;
+import com.etc.punchyy.biz.MissionBiz;
+import com.etc.punchyy.biz.UserBiz;
+import com.etc.punchyy.bizimpl.CompBizImpl;
+import com.etc.punchyy.bizimpl.MissionBizImpl;
+import com.etc.punchyy.bizimpl.UserBizImpl;
+
+import com.etc.punchyy.entity.Comp;
+import com.etc.punchyy.entity.Mission;
+import com.etc.punchyy.entity.User;
+import com.etc.punchyy.util.FrameUtil;
+
+import javax.swing.JScrollPane;
+import javax.swing.JButton;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import java.util.List;
+import java.util.Vector;
+
+public class Admin extends JFrame {
+
+	private JPanel contentPane;
+	private User user;
+	private JTable table;
+	private JScrollPane allinfo;
+	private JButton report,allmis,info,back;//全部反馈，全部任务信息，信用评估，用户信息
+	private String[] columName={"投诉单编号","投诉订单号","被投诉人名字","投诉原因","投诉时间"};
+	private String[] AllMis={"任务单号","任务名称","雇主","受雇人","任务发布时间","任务是否领取"};
+	private String[] AllUser={"用户ID","用户姓名","性别","联系方式","余额","信用度","密码","用户地址"};
+	private Vector rowData;
+	private CompBiz compbiz=new CompBizImpl();
+	private DefaultTableModel tableModel;
+	private MissionBiz missionbiz=new MissionBizImpl();
+	private UserBiz userb=new UserBizImpl();
+	private int i=1;
+	private JScrollPane scrollPane;
+	/**
+	 * Create the frame.
+	 */
+	public Admin(User user) {
+		this.user=user;
+		setTitle("管理");
+		FrameUtil.initFrame(this,930, 480);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		allinfo = new JScrollPane();
+		allinfo.setBounds(21, 43, 885, 369);
+		contentPane.add(allinfo);
+		
+		allmis = new JButton("所有任务");
+		allmis.addActionListener(new getmission());
+		allmis.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		allmis.setBounds(280, 10, 116, 23);
+		contentPane.add(allmis);
+		
+		info = new JButton("用户信息");
+		info.addActionListener(new getuser());
+		info.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		info.setBounds(530, 10, 106, 23);
+		contentPane.add(info);
+		
+	    back = new JButton("退出");
+	    back.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+	    back.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent arg0) {
+	    		Admin.this.dispose();
+	    	}
+	    });
+	    back.setBounds(773, 10, 106, 23);
+		contentPane.add(back);
+		
+
+		allinfo.setViewportView(table);
+		
+		report = new JButton("收到的投诉");
+		report.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		report.addActionListener(new getreport());
+		report.setBounds(41, 10, 116, 23);
+		contentPane.add(report);
+		
+		//默认界面
+		tableModel = new DefaultTableModel(); 
+		table = new JTable(tableModel){
+		public boolean isCellEditable(int row, int column){
+			return false;
+		}};
+		table.getTableHeader().setReorderingAllowed(false);   //不可整列移动   
+		table.getTableHeader().setResizingAllowed(false);   //不可拉动表格	
+		table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);//表示只允许选中第一行
+	
+		List<Comp> list=compbiz.queryAll();
+		String[][] data=new String[list.size()][columName.length];
+        for (int i = 0; i < list.size(); i++) {
+			for (int j = 0; j < columName.length; j++) {
+				if(j==0){
+					data[i][j]=list.get(i).getComp_id()+"";	
+				}else if(j==1){
+					data[i][j]=list.get(i).getComp_mission().getMission_id()+"";
+				}else if(j==2){
+					data[i][j]=list.get(i).getComp_bad().getUser_name()+"";
+				}else if(j==3){
+					data[i][j]=list.get(i).getComp_reason()+"";
+				}else if(j==4){
+					data[i][j]=list.get(i).getComp_time()+"";
+				}
+
+			}
+        }
+			//获取table适配器
+		    DefaultTableModel dtm=(DefaultTableModel) table.getModel();
+			dtm.setDataVector(data, columName);
+			allinfo.setViewportView(table);
+			
+			
+			scrollPane = new JScrollPane();
+			allinfo.setColumnHeaderView(scrollPane);
+			table.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					int clickCount = arg0.getClickCount();
+					if (clickCount == 2) {
+						// 获取选中的行
+						int rowid = table.getSelectedRow();
+						int id = Integer.valueOf((String) table.getValueAt(rowid, 0));
+						if(i==1){
+						// 获取选中的列
+					
+						Comp comp=compbiz.queryCompByID(id);
+						CompDetail cp=new CompDetail(comp);
+						}
+						if(i==2){
+							Mission	AM=missionbiz.serchById(id);
+							AdMission mm=new AdMission(AM);
+						}	
+					}
+				}
+			});
+//	new Thread(new Runnable() {
+//		
+//		@Override
+//		public void run() {
+//		while(true){
+//			if(i==1){
+//				List<Comp> list=compbiz.queryAll();
+//				String [][] data=new String[list.size()][columName.length];
+//		        for (int i = 0; i < list.size(); i++) {
+//					for (int j = 0; j < columName.length; j++) {
+//						if(j==0){
+//							data[i][j]=list.get(i).getComp_id()+"";	
+//						}else if(j==1){
+//							data[i][j]=list.get(i).getComp_mission().getMission_id()+"";
+//						}else if(j==2){
+//							data[i][j]=list.get(i).getComp_bad().getUser_name();
+//						}else if(j==3){
+//							data[i][j]=list.get(i).getComp_reason();
+//						}else if(j==4){
+//							data[i][j]=list.get(i).getComp_time();
+//						}
+//
+//					}
+//        }//获取table适配器
+//			    DefaultTableModel dtm=(DefaultTableModel) table.getModel();
+//				dtm.setDataVector(data, columName);
+//
+//			
+//			}if(i==2){List<Mission> list=missionbiz.serchAll();
+//			String[][] data=new String [list.size()][AllMis.length];
+//			for (int i = 0; i < list.size(); i++) {
+//				for (int j = 0; j < AllMis.length; j++) {
+//					if(j==0){
+//						data[i][j]=list.get(i).getMission_id()+"";
+//					}else if(j==1){
+//						data[i][j]=list.get(i).getMission_name();
+//					}else if(j==2){
+//						if(list.get(i).getMission_emper()==null){
+//							data[i][j]="";}
+//						else{
+//						data[i][j]=list.get(i).getMission_emper().getUser_name();
+//					}
+//						}else if(j==3){
+//						if(list.get(i).getMission_emp()==null){
+//							data[i][j]="";}
+//						else{
+//						data[i][j]=list.get(i).getMission_emp().getUser_name();
+//					}
+//						}else if(j==4){
+//						data[i][j]=list.get(i).getMission_time();
+//					}else if(j==5){
+//						data[i][j]=list.get(i).getMission_state();
+//					}
+//				
+//			}
+//		}//获取table适配器
+//		    DefaultTableModel dtm=(DefaultTableModel) table.getModel();
+//			dtm.setDataVector(data, AllMis);	 
+//				
+//			}
+//		}
+//			
+//		}
+//	}).start();
+	
+	}
+			
+
+	//反馈单界面
+        public class getreport implements ActionListener{
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				i=1;
+				List<Comp> list=compbiz.queryAll();
+				String [][] data=new String[list.size()][columName.length];
+		        for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < columName.length; j++) {
+						if(j==0){
+							data[i][j]=list.get(i).getComp_id()+"";	
+						}else if(j==1){
+							data[i][j]=list.get(i).getComp_mission().getMission_id()+"";
+						}else if(j==2){
+							data[i][j]=list.get(i).getComp_bad().getUser_name();
+						}else if(j==3){
+							data[i][j]=list.get(i).getComp_reason();
+						}else if(j==4){
+							data[i][j]=list.get(i).getComp_time();
+						}
+
+					}
+        }//获取table适配器
+			    DefaultTableModel dtm=(DefaultTableModel) table.getModel();
+				dtm.fireTableStructureChanged();
+				dtm.fireTableDataChanged();
+				dtm.setDataVector(data, columName);
+				
+
+		
+			}
+        }
+       //所有任务单界面
+        public class getmission	implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			i=2;
+			List<Mission> list=missionbiz.serchAll();
+			String[][] data=new String [list.size()][AllMis.length];
+			for (int i = 0; i < list.size(); i++) {
+				for (int j = 0; j < AllMis.length; j++) {
+					if(j==0){
+						data[i][j]=list.get(i).getMission_id()+"";
+					}else if(j==1){
+						data[i][j]=list.get(i).getMission_name();
+					}else if(j==2){
+						if(list.get(i).getMission_emper()==null){
+							data[i][j]="";}
+						else{
+						data[i][j]=list.get(i).getMission_emper().getUser_name();
+					}
+						}else if(j==3){
+						if(list.get(i).getMission_emp()==null){
+							data[i][j]="";}
+						else{
+						data[i][j]=list.get(i).getMission_emp().getUser_name();
+					}
+						}else if(j==4){
+						data[i][j]=list.get(i).getMission_time();
+					}else if(j==5){
+						data[i][j]=list.get(i).getMission_state();
+					}
+				
+			}
+		}//获取table适配器
+		    DefaultTableModel dtm=(DefaultTableModel) table.getModel();
+			dtm.fireTableStructureChanged();
+			dtm.fireTableDataChanged();
+			dtm.setDataVector(data, AllMis);	
+			
+
+		}
+        }
+        public class getuser implements ActionListener{
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				i=3;
+            List<User> list=userb.queryAll();
+            String[][] data=new String[list.size()][AllUser.length];
+            for (int i = 0; i < list.size(); i++) {
+            	for (int j = 0; j < AllUser.length; j++) {
+					if(j==0){
+						data[i][j]=list.get(i).getUser_id()+"";
+					}else if(j==1){
+						data[i][j]=list.get(i).getUser_name();
+					}else if(j==2){
+						data[i][j]=list.get(i).getUser_sex();
+					}else if(j==3){
+						data[i][j]=list.get(i).getUser_tel();
+					}else if(j==4){
+						data[i][j]=list.get(i).getUser_money()+"";
+					}else if(j==5){
+						data[i][j]=list.get(i).getUser_credit()+"";
+					}else if(j==6){
+						data[i][j]=list.get(i).getUser_pwd();
+					}else if(j==7){
+						data[i][j]=list.get(i).getUser_addr();
+					}
+					}
+				}//获取table适配器
+		    DefaultTableModel dtm=(DefaultTableModel) table.getModel();
+			dtm.setDataVector(data, AllUser);	
+			dtm.fireTableStructureChanged();
+			dtm.fireTableDataChanged();
+
+			}
+			}
+}

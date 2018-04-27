@@ -1,0 +1,32 @@
+package com.etc.punchyy.dao;
+
+
+
+import java.util.List;
+
+import com.etc.punchyy.entity.Mission;
+import com.etc.punchyy.entity.User;
+
+public interface MissionDao {
+	//添加任务（调用用户的功能）
+	public boolean addMission(Mission mission);
+	//根据被雇者id查找任务
+	public List<Mission> serchGet(User user);
+	//根据雇主id查找任务
+	public List<Mission> serchMy(User user);
+	//模糊关键词词查找未完成的任务
+	public List<Mission> serchLike(String key);
+	//根据任务编号修改任务状态（调用用户的功能）
+	public boolean updateState(String state,int id);
+	//查看所有的订单
+	public List<Mission> serchAll();
+	//查看所有未领取的订单 
+	public List<Mission> serchUn();
+	//用订单id查询订单
+	public Mission serchById(int id);
+	
+	
+	
+	
+	
+}

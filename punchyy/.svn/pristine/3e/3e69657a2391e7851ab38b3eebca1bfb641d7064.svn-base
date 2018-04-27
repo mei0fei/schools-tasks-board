@@ -1,0 +1,42 @@
+package com.etc.punchyy.bizimpl;
+
+import com.etc.punchyy.biz.UserBiz;
+import com.etc.punchyy.dao.UserDao;
+import com.etc.punchyy.daoimpl.UserDaoImpl;
+import com.etc.punchyy.entity.User;
+
+public class UserBizImpl implements UserBiz{
+
+	UserDao dao=new UserDaoImpl();
+	
+	@Override
+	public User login(int id, String pwd) {
+		// TODO Auto-generated method stub
+		return dao.login(id, pwd);
+	}
+
+	@Override
+	public boolean register(User user) {
+		// TODO Auto-generated method stub
+		return dao.register(user);
+	}
+
+	@Override
+	public boolean updateMoneyById(int id, double money) {
+		// TODO Auto-generated method stub
+		return dao.updateMoneyById(User, money);
+	}
+
+	@Override
+	public boolean updateCreditById(int id, int credit) {
+		// TODO Auto-generated method stub
+		return dao.updateCreditById(id, credit);
+	}
+
+	@Override
+	public User queryUserById(int id) {
+		// TODO Auto-generated method stub
+		return dao.queryUserById(id);
+	}
+
+}

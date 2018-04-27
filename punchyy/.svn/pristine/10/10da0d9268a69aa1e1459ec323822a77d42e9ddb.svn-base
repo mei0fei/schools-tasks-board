@@ -1,0 +1,139 @@
+package com.etc.punchyy.gui;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+
+import com.etc.punchyy.biz.CompBiz;
+import com.etc.punchyy.biz.MissionBiz;
+import com.etc.punchyy.biz.UserBiz;
+import com.etc.punchyy.bizimpl.CompBizImpl;
+import com.etc.punchyy.bizimpl.MissionBizImpl;
+import com.etc.punchyy.bizimpl.UserBizImpl;
+import com.etc.punchyy.entity.Comp;
+import com.etc.punchyy.entity.Mission;
+import com.etc.punchyy.entity.User;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class CompDetail extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField reportname;
+	private JTextField badname;
+	private JTextField reporttel;
+	private JTextField badtel;
+	private JTextField compid;
+	private JTextField compname;
+	private JTextField reason;
+	private JButton update1,back;//信用修改，返回按钮
+	private UserBiz user=new UserBizImpl();
+	private CompBiz comp=new CompBizImpl();
+	private MissionBiz mis=new MissionBizImpl();
+	private Mission miss;
+	private User u;
+	private Comp c;
+
+	/**
+	 * Create the frame.
+	 * @param user2 
+	 * @param comp2 
+	 */
+	public CompDetail(Comp comp2, User user2) {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 471, 398);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("投诉人");
+		lblNewLabel.setBounds(10, 10, 64, 15);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("被投诉人");
+		lblNewLabel_1.setBounds(226, 10, 72, 15);
+		contentPane.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("投诉人电话");
+		lblNewLabel_2.setBounds(10, 49, 64, 15);
+		contentPane.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("被投诉人电话");
+		lblNewLabel_3.setBounds(226, 49, 72, 15);
+		contentPane.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("投诉单单号");
+		lblNewLabel_4.setBounds(10, 88, 64, 15);
+		contentPane.add(lblNewLabel_4);
+		
+		JLabel lblNewLabel_5 = new JLabel("投诉单名称");
+		lblNewLabel_5.setBounds(226, 88, 72, 15);
+		contentPane.add(lblNewLabel_5);
+		
+		reportname = new JTextField();
+		reportname.setBounds(84, 7, 124, 21);
+		reportname.setText(miss.getMission_emp().getUser_id()+"");
+		reportname.setFocusable(false);
+		contentPane.add(reportname);
+		reportname.setColumns(10);
+		
+		badname = new JTextField();
+		badname.setBounds(308, 7, 124, 21);
+		badname.setText(miss.getMission_emper().getUser_id()+"");
+		contentPane.add(badname);
+		badname.setColumns(10);
+		
+		reporttel = new JTextField();
+		reporttel.setBounds(84, 46, 124, 21);
+		reporttel.setText(miss.getMission_emp().getUser_tel());
+		contentPane.add(reporttel);
+		reporttel.setColumns(10);
+		
+		badtel = new JTextField();
+		badtel.setBounds(308, 46, 124, 21);
+		badtel.setText(miss.getMission_emper().getUser_tel());
+		contentPane.add(badtel);
+		badtel.setColumns(10);
+		
+		compid = new JTextField();
+		compid.setBounds(84, 85, 124, 21);
+		compid.setText(c.getComp_id()+"");
+		contentPane.add(compid);
+		compid.setColumns(10);
+		
+		compname = new JTextField();
+		compname.setBounds(308, 85, 124, 21);
+		compname.setText(c.getComp_mission().getMission_name());
+		contentPane.add(compname);
+		compname.setColumns(10);
+		
+		reason = new JTextField();
+		reason.setBounds(30, 129, 402, 165);
+		reason.setText(c.getComp_reason());
+		contentPane.add(reason);
+		reason.setColumns(10);
+		
+		update1 = new JButton("信用修改");
+		update1.setBounds(51, 304, 93, 23);
+		contentPane.add(update1);
+		
+		back = new JButton("返回");
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Admin ad=new Admin(CompDetail.this.u);
+				ad.setVisible(true);
+				CompDetail.this.dispose();
+			}
+		});
+		back.setBounds(302, 304, 93, 23);
+		contentPane.add(back);
+	}
+}

@@ -1,0 +1,5 @@
+package com.etc.punchyy.dao;
+
+public interface MissionDao {
+
+}

@@ -1,0 +1,233 @@
+package com.etc.punchyy.gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JPasswordField;
+import javax.swing.JButton;
+import javax.swing.UIManager;
+
+import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
+
+import com.etc.punchyy.biz.UserBiz;
+import com.etc.punchyy.bizimpl.UserBizImpl;
+import com.etc.punchyy.entity.User;
+import com.etc.punchyy.util.FrameUtil;
+import com.etc.punchyy.util.NumberControl;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.Color;
+import java.awt.Font;
+
+public class Login extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField userid;    //用户名输入框
+	private JPasswordField pwdtext;//密码输入框
+	private JButton login,register; //登录和注册按钮
+	private JLabel idhint,pwdgint;	//帐号输入框的提示   密码输入框的提示
+	private UserBiz userBiz = new UserBizImpl();
+	private User user =new User();
+	private int id;
+	private String pwd;
+	private JLabel lblNewLabel_2;
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					
+					  BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow;
+				        org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+						UIManager.put("RootPane.setupButtonVisible", false);
+					Login frame = new Login();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	public Login() {
+		setTitle("登录");
+		FrameUtil.initFrame(this, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("帐  号：");
+		lblNewLabel.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		lblNewLabel.setBounds(83, 58, 65, 21);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("密  码：");
+		lblNewLabel_1.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		lblNewLabel_1.setBounds(83, 103, 65, 19);
+		contentPane.add(lblNewLabel_1);
+		
+		userid = new JTextField();
+		userid.setBounds(150, 58, 171, 21);
+		userid.setDocument(new NumberControl(8));
+		userid.addFocusListener(new FocusListener() {			
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				if(userid.getText()==null||userid.getText().equals("")){
+					idhint.setText("帐号不能为空");
+					idhint.setForeground(Color.red);
+				}else if(userid.getText().indexOf(" ")!=-1){
+					idhint.setText("帐号不能有空格");
+					idhint.setForeground(Color.red);
+				}else{
+					idhint.setText("");
+				}
+			}			
+			@Override
+			public void focusGained(FocusEvent arg0) {			
+			}
+		});
+		contentPane.add(userid);
+		
+		pwdtext = new JPasswordField();
+		pwdtext.setBounds(150, 102, 171, 21);
+		pwdtext.addKeyListener(new KeyListener() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+			}
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// 设置按键点击监听 回车键盘执行登录按钮
+				  if(e.getKeyChar() == KeyEvent.VK_ENTER ) {
+					login.doClick();
+				  }
+			}
+		});
+		pwdtext.addFocusListener(new FocusListener() {			
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				String pwd = new String(pwdtext.getPassword());
+				if(pwd==null||"".equals(pwd)){
+					pwdgint.setText("密码不能为空");
+					pwdgint.setForeground(Color.red);
+				}else{
+					pwdgint.setText("");
+				}
+			}	
+			@Override
+			public void focusGained(FocusEvent arg0) {
+			}
+		});
+		contentPane.add(pwdtext);
+		idhint= new JLabel("");
+		idhint.setBounds(335, 59, 99, 21);
+		contentPane.add(idhint);
+		
+		pwdgint = new JLabel("");
+	
+		pwdgint.setBounds(333, 104, 99, 21);
+		contentPane.add(pwdgint);
+		
+		//登录
+		login = new JButton("登录");
+		login.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		login.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//判断输入框是否有内容
+				if("".equals(new String(pwdtext.getPassword()))||"".equals(userid.getText())){
+					JOptionPane.showMessageDialog(Login.this,"请输入未输入的信息");
+					return;
+				}
+				//判断提示框是否有错误提示
+				if(!"".equals(Login.this.idhint.getText())||!"".equals(Login.this.pwdgint.getText())){
+					JOptionPane.showMessageDialog(Login.this,"请检查错误信息");
+					return;
+				}
+				
+				id = Integer.valueOf(userid.getText());
+				pwd = new String(pwdtext.getPassword());
+				//判断前关闭按钮
+				login.setEnabled(false);
+				register.setEnabled(false);
+				
+				new Thread(new Runnable() {
+					public void run() {
+						//判断账号身份
+						user= userBiz.login(id,pwd);
+						if(user==null){
+							JOptionPane.showMessageDialog(Login.this,"登录失败,请检查输入的账号或者密码");
+							login.setEnabled(true);
+							register.setEnabled(true);
+						}else {
+							if(user.getUser_id()<10001){
+								JOptionPane.showMessageDialog(Login.this, "尊敬的管理员 "+user.getUser_name()+" 您好");
+								Admin admin = new Admin(user);
+								Login.this.dispose();
+							}else {
+								JOptionPane.showMessageDialog(Login.this, user.getUser_name()+"您好");
+								Home home = new Home(user);
+								Login.this.dispose();
+							}
+						}
+					}
+				}).start();
+			
+			}
+		});
+		login.setBounds(83, 165, 99, 35);
+		contentPane.add(login);
+		//注册
+		register = new JButton("注册");
+		register.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		register.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Register register = new Register();
+				Login.this.dispose();			
+			}
+		});
+		register.setBounds(222, 165, 99, 35);
+		contentPane.add(register);
+		
+		lblNewLabel_2 = new JLabel("忘记密码");
+		lblNewLabel_2.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+		lblNewLabel_2.setBounds(256, 133, 65, 15);
+		lblNewLabel_2.addMouseListener(new MouseListener() {			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {				
+			}			
+			@Override
+			public void mousePressed(MouseEvent arg0) {				
+			}			
+			@Override
+			public void mouseExited(MouseEvent arg0) {			
+			}			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {				
+			}
+			@Override
+			public void mouseClicked(MouseEvent arg0) {		
+				ForgetPwd forgetPwd = new ForgetPwd();
+				forgetPwd.setVisible(true);
+				Login.this.dispose();
+			}
+		});
+		contentPane.add(lblNewLabel_2);
+	}
+}

@@ -1,0 +1,238 @@
+package com.etc.punchyy.gui;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.ButtonGroup;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JButton;
+import com.etc.punchyy.util.FrameUtil;
+import com.etc.punchyy.util.NumberControl;
+
+
+import com.etc.punchyy.biz.UserBiz;
+import com.etc.punchyy.bizimpl.UserBizImpl;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.Color;
+
+public class Register extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField textField;
+	private JPasswordField passwordField;
+	private JPasswordField passwordField_1;
+	private JTextField textField_1;
+	private JLabel namehint,pwdhint,againhint,telhint;   //注册名字、密码、确认密码、电话的提示框
+	private ButtonGroup sexbg;		//性别按钮组
+	private JRadioButton man,woman;//性别单选按钮
+	private JRadioButton ok,notok;  //接受单选按钮
+	private ButtonGroup okbg;      //接受按钮组
+	private boolean flag1,flag2,flag3,flag4,flag5;   //判断姓名，密码，确认密码，是否接受用户协议
+	private String pwd;      //用于存放注册的密码
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Register frame = new Register();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public Register() {
+		sexbg = new ButtonGroup();
+		okbg = new ButtonGroup();
+		setResizable(false);
+		setTitle("注册");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 383, 534);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("用户名：");
+		lblNewLabel.setBounds(78, 37, 54, 15);
+		contentPane.add(lblNewLabel);
+		
+		textField = new JTextField();
+		textField.setForeground(Color.BLACK);
+		textField.setBounds(129, 34, 118, 21);
+		textField.addFocusListener(new FocusListener() {			
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				UserBiz userBiz = new UserBizImpl();
+				if(textField.getText()==null||textField.getText().equals("")){
+					namehint.setText("×用户名不允许为空");
+					flag1=false;
+				}else {
+					if(userBiz.queryUserByName(textField.getText())==null){
+						namehint.setText("√用户名可用");
+						namehint.setForeground(Color.green);
+						flag1=true;
+					}else {
+						namehint.setText("×用户名已存在");
+						flag1=false;
+					}
+				}
+				
+			}			
+			@Override
+			public void focusGained(FocusEvent arg0) {			
+			}
+		});
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		namehint= new JLabel("");
+		namehint.setForeground(Color.RED);
+		namehint.setBounds(257, 37, 90, 15);
+		contentPane.add(namehint);
+		
+		JLabel lblNewLabel_2 = new JLabel("密  码：");
+		lblNewLabel_2.setBounds(78, 77, 54, 15);
+		contentPane.add(lblNewLabel_2);
+		
+		passwordField = new JPasswordField();
+		passwordField.setBounds(129, 74, 118, 21);
+		passwordField.addFocusListener(new FocusListener() {		
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				pwdhint.setText("");
+				pwd = new String(passwordField.getPassword());
+				if(pwd==null||pwd.equals("")){
+					pwdhint.setText("×密码不允许为空");
+					pwdhint.setForeground(Color.red);
+					flag2=false;
+				}else {
+					pwdhint.setText("√密码可用");
+					pwdhint.setForeground(Color.green);
+					flag2=true;
+				}
+			}			
+			@Override
+			public void focusGained(FocusEvent arg0) {			
+			}
+		});
+		contentPane.add(passwordField);
+		
+		pwdhint = new JLabel("");
+		pwdhint.setBounds(257, 77, 90, 15);
+		contentPane.add(pwdhint);
+		
+		JLabel lblNewLabel_4 = new JLabel("再确认：");
+		lblNewLabel_4.setBounds(78, 117, 54, 15);
+		contentPane.add(lblNewLabel_4);
+		
+		passwordField_1 = new JPasswordField();
+		passwordField_1.setBounds(129, 114, 118, 21);
+		passwordField_1.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		contentPane.add(passwordField_1);
+		
+		againhint = new JLabel("New label");
+		againhint.setBounds(257, 117, 90, 15);
+		contentPane.add(againhint);
+		
+		JLabel lblNewLabel_6 = new JLabel("电  话：");
+		lblNewLabel_6.setBounds(78, 157, 54, 15);
+		contentPane.add(lblNewLabel_6);
+		
+		textField_1 = new JTextField();
+		textField_1.setBounds(129, 154, 118, 21);
+		contentPane.add(textField_1);
+		textField_1.setColumns(10);
+		textField_1.setDocument(new NumberControl(2));
+		
+		telhint = new JLabel("New label");
+		telhint.setBounds(257, 157, 54, 15);
+		contentPane.add(telhint);
+		
+		JLabel lblNewLabel_8 = new JLabel("性  别：");
+		lblNewLabel_8.setBounds(78, 197, 54, 15);
+		contentPane.add(lblNewLabel_8);
+		
+		man = new JRadioButton("男");
+		man.setBounds(139, 193, 54, 23);
+		man.setSelected(true);
+		sexbg.add(man);
+		contentPane.add(man);
+		
+		woman = new JRadioButton("女");
+		woman.setBounds(212, 193, 54, 23);
+		sexbg.add(woman);
+		contentPane.add(woman);
+		
+		JLabel lblNewLabel_9 = new JLabel("须  知：");
+		lblNewLabel_9.setBounds(78, 237, 54, 15);
+		contentPane.add(lblNewLabel_9);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(78, 262, 233, 116);
+		contentPane.add(scrollPane);
+		
+		JTextArea textArea = new JTextArea();
+		scrollPane.setViewportView(textArea);
+		textArea.setFocusable(false);
+		textArea.setText("用户条例： \n1.    \n2.    \n3.    \n最终解释权归我公司所有");
+		
+		ok = new JRadioButton("我接受");
+		ok.setBounds(88, 384, 90, 23);
+		ok.setSelected(true);
+		okbg.add(ok);
+		contentPane.add(ok);
+		
+		notok = new JRadioButton("我不接受");
+		notok.setBounds(190, 384, 121, 23);
+		okbg.add(notok);
+		contentPane.add(notok);
+		
+		JButton btnNewButton = new JButton("注册");
+		btnNewButton.setBounds(85, 430, 93, 23);
+		contentPane.add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("返回");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Login login = new Login();
+				login.setVisible(true);
+				Register.this.dispose();		
+			}
+		});
+		btnNewButton_1.setBounds(205, 430, 93, 23);
+		contentPane.add(btnNewButton_1);
+	}
+}

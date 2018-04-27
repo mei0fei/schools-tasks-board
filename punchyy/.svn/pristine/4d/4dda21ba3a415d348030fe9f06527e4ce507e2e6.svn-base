@@ -1,0 +1,69 @@
+package com.etc.punchyy.gui;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+import com.etc.punchyy.biz.UserBiz;
+import com.etc.punchyy.bizimpl.UserBizImpl;
+import com.etc.punchyy.entity.User;
+
+public class Withdraw extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField textField;
+	private User user;
+	private JLabel lblNewLabel;
+	private JButton Button;
+	UserBiz biz=new UserBizImpl();
+
+
+
+	/**
+	 * Create the frame.
+	 */
+	public Withdraw() {
+		setTitle("提现");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
+		setContentPane(contentPane);
+		lblNewLabel = new JLabel("提现金额：");
+		lblNewLabel.setBounds(61, 44, 120, 31);
+		contentPane.add(lblNewLabel);
+		
+		textField = new JTextField();
+		textField.setBounds(61, 95, 293, 44);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		Button = new JButton("确认充值");
+		Button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(biz.withdrawMoneyById(Withdraw.this.user,Double.parseDouble((textField.getText())))){
+					JOptionPane.showMessageDialog(Withdraw.this, "提现成功！");
+				}else{
+					JOptionPane.showMessageDialog(Withdraw.this, "提现失败！");
+				}
+				Home home = new Home(Withdraw.this.user);
+				home.setVisible(true);
+				Withdraw.this.dispose();
+			}
+		});
+		Button.setBounds(123, 167, 145, 53);
+		contentPane.add(Button);
+	}
+
+}

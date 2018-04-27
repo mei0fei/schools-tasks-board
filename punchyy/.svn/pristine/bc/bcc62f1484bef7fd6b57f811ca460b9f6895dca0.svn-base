@@ -1,0 +1,70 @@
+package com.etc.punchyy.gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+
+import com.etc.punchyy.biz.UserBiz;
+import com.etc.punchyy.bizimpl.UserBizImpl;
+import com.etc.punchyy.entity.User;
+
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class Recharge extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField textField;
+	private User user;
+	private JLabel lblNewLabel;
+	UserBiz biz=new UserBizImpl();
+
+	/**
+	 * Create the frame.
+	 */
+	public Recharge(User user) {
+		this.user=user;
+		setTitle("充值");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		lblNewLabel = new JLabel("充值金额：");
+		lblNewLabel.setFont(new Font("宋体", Font.PLAIN, 24));
+		lblNewLabel.setBounds(61, 44, 120, 31);
+		contentPane.add(lblNewLabel);
+		
+		textField = new JTextField();
+		textField.setFont(new Font("宋体", Font.PLAIN, 24));
+		textField.setBounds(61, 95, 293, 44);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		JButton btnNewButton = new JButton("确认充值");
+		btnNewButton.setFont(new Font("华文行楷", Font.BOLD, 24));
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(biz.rechargeMoneyById(Recharge.this.user,Double.parseDouble((lblNewLabel.getText())))){
+					JOptionPane.showMessageDialog(Recharge.this, "充值成功！");
+				}else{
+					JOptionPane.showMessageDialog(Recharge.this, "充值失败！");
+				}
+				Home home = new Home(Recharge.this.user);
+				home.setVisible(true);
+				Recharge.this.dispose();
+			}
+		});
+		btnNewButton.setBounds(123, 167, 145, 53);
+		contentPane.add(btnNewButton);
+	}
+}

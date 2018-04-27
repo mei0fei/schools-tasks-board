@@ -1,0 +1,114 @@
+package com.etc.punchyy.daoimpl;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.etc.punchyy.dao.UserDao;
+import com.etc.punchyy.entity.User;
+import com.etc.punchyy.util.JDBCUtil;
+
+public class UserDaoImpl implements UserDao {
+
+	JDBCUtil util = new JDBCUtil();
+
+	@Override
+	public User login(int id, String pwd) {
+		ResultSet rs = util.query(
+				"select * from t_user where user_id=? and user_pwd=?", id, pwd);
+		User user = null;
+		try {
+			if (rs.next()) {
+				user = new User();
+				user.setUser_id(rs.getInt("user_id"));
+				user.setUser_name(rs.getString("user_name"));
+				user.setUser_sex(rs.getString("user_sex"));
+				user.setUser_tel(rs.getString("user_tel"));
+				user.setUser_money(rs.getDouble("user_money"));
+				user.setUser_credit(rs.getInt("user_credit"));
+				user.setUser_pwd(rs.getString("user_pwd"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			util.closeAll();
+		}
+		return user;
+	}
+
+	@Override
+	public boolean register(User user) {
+		int i = util
+				.update("insert into t_user (user_name,user_sex,user_tel,user_money,user_credit,user_pwd) values (?,?,?,?,?,?)",
+						user.getUser_name(), user.getUser_sex(),
+						user.getUser_tel(), user.getUser_money(),
+						user.getUser_credit(), user.getUser_pwd());
+		return i>0;
+	}
+
+	@Override
+	public boolean updateCreditById(int id, int credit) {
+		int i=util.update("update t_user set user_credit=? where user_id=?", credit,id);
+		return i>0;
+	}
+ 
+	@Override
+	public User queryUserById(int id) {
+		ResultSet rs = util.query("select * from t_user where user_id=?",id);
+		User user = null;
+		try {
+			if (rs.next()) {
+				user = new User();
+				user.setUser_id(rs.getInt("user_id"));
+				user.setUser_name(rs.getString("user_name"));
+				user.setUser_sex(rs.getString("user_sex"));
+				user.setUser_tel(rs.getString("user_tel"));
+				user.setUser_money(rs.getDouble("user_money"));
+				user.setUser_credit(rs.getInt("user_credit"));
+				user.setUser_pwd(rs.getString("user_pwd"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			util.closeAll();
+		}
+		return user;
+	}
+
+	@Override
+	public boolean rechargeMoneyById(User user, double money) {
+		int i=util.update("update t_user set user_money=user_money+? where user_id=?",money ,user.getUser_id());
+		return i>0;
+	}
+
+	@Override
+	public boolean withdrawMoneyById(User user, double money) {
+		int i=util.update("update t_user set user_money=user_money-? where user_id=?",money,user.getUser_id());
+		return i>0;
+	}
+
+	@Override
+	public User queryUserByName(String name) {
+		ResultSet rs = util.query("select * from t_user where user_name=?",name);
+		User user = null;
+		try {
+			if (rs.next()) {
+				user = new User();
+				user.setUser_id(rs.getInt("user_id"));
+				user.setUser_name(rs.getString("user_name"));
+				user.setUser_sex(rs.getString("user_sex"));
+				user.setUser_tel(rs.getString("user_tel"));
+				user.setUser_money(rs.getDouble("user_money"));
+				user.setUser_credit(rs.getInt("user_credit"));
+				user.setUser_pwd(rs.getString("user_pwd"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			util.closeAll();
+		}
+		return user;
+	}
+}

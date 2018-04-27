@@ -1,0 +1,229 @@
+package com.etc.punchyy.gui;
+
+import java.awt.BorderLayout;
+
+import java.awt.Color;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+
+import com.etc.punchyy.biz.CompBiz;
+import com.etc.punchyy.biz.MissionBiz;
+import com.etc.punchyy.biz.UserBiz;
+import com.etc.punchyy.bizimpl.CompBizImpl;
+import com.etc.punchyy.bizimpl.MissionBizImpl;
+import com.etc.punchyy.bizimpl.UserBizImpl;
+import com.etc.punchyy.dao.MissionDao;
+import com.etc.punchyy.dao.UserDao;
+import com.etc.punchyy.daoimpl.MissionDaoImpl;
+import com.etc.punchyy.daoimpl.UserDaoImpl;
+import com.etc.punchyy.entity.Comp;
+import com.etc.punchyy.entity.Mission;
+import com.etc.punchyy.entity.User;
+import com.etc.punchyy.util.FrameUtil;
+import com.etc.punchyy.util.NumberControl;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.Font;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+public class Complain extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField Badid;  //被投诉人的ID
+	private JTextField Misid;  //被投诉单的ID
+	private JTextField Reason;  //投诉详情
+	private JLabel Badidhit,Misidhit,Reasonhit,Badidhit2,Misidhit2;//被投诉人ID，投诉ID，详情的提示框
+	private JButton home,OjbK;//返回主界面，提交按钮,
+	private String time;
+	private UserBiz userbiz=new UserBizImpl();
+	private MissionBiz mis=new MissionBizImpl();
+	private CompBiz comp=new CompBizImpl();
+	private int i,i2;
+	private User user;
+
+
+	/**
+	 * Create the frame.
+	 */
+	
+	public Complain(User user) {
+		this.user=user;
+		setTitle("投诉");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		Badid = new JTextField();
+		Badid.setBounds(296, 10, 128, 21);
+		Badid.setDocument(new NumberControl(6));
+		//监听
+		Badid.addFocusListener(new FocusListener(){
+			@Override//监听判断用户是否存在
+			public void focusGained(FocusEvent arg0) {
+			}
+			@Override
+			public void focusLost(FocusEvent arg0) {
+					if("".equals(Badid.getText())){
+						Badidhit.setText("请输入ID");
+					}
+					else if("".equals(Complain.this.Misid.getText())){
+						Misidhit.setText("请输入任务ID");
+					}else {
+						if("".equals(Misidhit.getText())){
+							i=Integer.valueOf(Badid.getText());
+							Mission m=mis.serchById(Integer.valueOf(Misid.getText()));
+							if(m.getMission_emp().getUser_id()==i||m.getMission_emper().getUser_id()==i){
+								Badidhit.setText("");
+							}else{
+								Badidhit.setText("请输入正确的ID");
+							}
+						}
+					}
+			}
+			});
+		contentPane.add(Badid);
+		
+		JLabel lblNewLabel = new JLabel("被投诉人");
+		lblNewLabel.setBounds(232, 13, 54, 15);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("投诉单号");
+		lblNewLabel_1.setBounds(22, 13, 54, 15);
+		contentPane.add(lblNewLabel_1);
+		
+		Misid = new JTextField();
+		Misid.setBounds(86, 10, 103, 21);
+		Misid.setDocument(new NumberControl(5));
+
+		Misid.addFocusListener(new FocusListener(){	
+				@Override//监听判断任务是否存在
+				public void focusGained(FocusEvent arg0) {
+				}
+				@Override
+				public void focusLost(FocusEvent arg0) {
+					
+					if("".equals(Complain.this.Misid.getText())){
+						Misidhit.setText("请输入任务ID");
+					}else { 
+							i2=Integer.valueOf(Misid.getText());
+							
+							if(mis.serchById(i2)==null){
+							Misidhit.setText("此任务ID不存在");}
+							else {
+							Misidhit.setText("");
+						}
+							return;}}}
+				);
+		contentPane.add(Misid);
+		Misid.setColumns(10);
+		
+		JLabel lblNewLabel_2 = new JLabel("投诉详情");
+		lblNewLabel_2.setBounds(22, 52, 70, 15);
+		contentPane.add(lblNewLabel_2);
+		
+		Reason = new JTextField();
+		Reason.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+            Reasonhit.setText("");
+					return;
+				}
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				Reasonhit.setText("");
+				if(Reason.getText()==null||Reason.getText().equals("")){
+					Reasonhit.setText("详情不能为空");
+					return;
+				
+			}
+		}
+		});
+		Reason.setBounds(22, 77, 389, 137);
+		contentPane.add(Reason);
+		Reason.setColumns(10);
+		
+		//提交按钮设置，点击提交后上传文本框数据到数据库
+		OjbK = new JButton("提交");
+		OjbK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(Badid.equals("")||Misid==null||Misid.equals("")||Reason==null||Reason.equals("")||userbiz.queryUserById(i)==null||mis.serchById(i2)==null){
+				JOptionPane.showMessageDialog(Complain.this, "提交失败");
+			}else{
+				Comp comp1=new Comp();
+				UserDao user=new UserDaoImpl();
+				MissionDao mis=new MissionDaoImpl();
+				comp1.setComp_bad(user.queryUserById(Integer.valueOf(Badid.getText())));
+				comp1.setComp_mission(mis.serchById(Integer.valueOf(Misid.getText())));
+				comp1.setComp_reason(Reason.getText());
+				comp1.setComp_time(FrameUtil.getWebsiteDatetime());
+				comp.addMission(comp1);
+				JOptionPane.showMessageDialog(Complain.this, "提交成功");
+			}
+		}
+		});
+		OjbK.setBounds(72, 237, 93, 23);
+		contentPane.add(OjbK);
+		
+	    home = new JButton("返回主界面");
+		home.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Home home=new Home(Complain.this.user);
+				home.setVisible(true);
+				Complain.this.dispose();
+			}
+		});
+		home.setBounds(265, 237, 116, 23);
+		contentPane.add(home);
+		
+		Badidhit = new JLabel("");
+		Badidhit.setFont(new Font("宋体", Font.PLAIN, 14));
+		Badidhit.setForeground(Color.RED);
+		Badidhit.setBounds(296, 33, 128, 15);
+		contentPane.add(Badidhit);
+		
+		Misidhit = new JLabel("");
+		Misidhit.setFont(new Font("宋体", Font.PLAIN, 14));
+		Misidhit.setForeground(Color.RED);
+		Misidhit.setText("请输入任务ID");
+		Misidhit.setBounds(73, 33, 116, 15);
+		contentPane.add(Misidhit);
+		
+		Reasonhit = new JLabel("");
+		Reasonhit.setFont(new Font("宋体", Font.PLAIN, 14));
+		Reasonhit.setForeground(Color.RED);
+		Reasonhit.setBounds(163, 224, 103, 15);
+		contentPane.add(Reasonhit);
+		
+		Badidhit2 = new JLabel("");
+		Badidhit2.setFont(new Font("宋体", Font.PLAIN, 14));
+		Badidhit2.setForeground(Color.RED);
+		Badidhit2.setBounds(89, 33, 128, 15);
+		contentPane.add(Badidhit2);
+		
+		Misidhit2 = new JLabel("");
+		Misidhit2.setFont(new Font("宋体", Font.PLAIN, 14));
+		Misidhit2.setForeground(Color.RED);
+		Misidhit2.setBounds(308, 33, 116, 15);
+		contentPane.add(Misidhit2);
+	}
+}

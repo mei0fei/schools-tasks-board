@@ -1,0 +1,93 @@
+package com.etc.punchyy.gui;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JPasswordField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class Login extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField userid;    //ÓÃ»§ÃûÊäÈë¿ò
+	private JPasswordField pwdtext;//ÃÜÂëÊäÈë¿ò
+	private JButton login,register; //µÇÂ¼ºÍ×¢²á°´Å¥
+	private JLabel idhint,pwdgint;	//ÕÊºÅÊäÈë¿òµÄÌáÊ¾   ÃÜÂëÊäÈë¿òµÄÌáÊ¾
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Login frame = new Login();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public Login() {
+		setTitle("µÇÂ¼");
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("ÕÊ  ºÅ£º");
+		lblNewLabel.setBounds(70, 58, 54, 15);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("ÃÜ  Âë£º");
+		lblNewLabel_1.setBounds(70, 106, 54, 15);
+		contentPane.add(lblNewLabel_1);
+		
+		userid = new JTextField();
+		userid.setBounds(134, 55, 164, 21);
+		contentPane.add(userid);
+		userid.setColumns(10);
+		
+		pwdtext = new JPasswordField();
+		pwdtext.setBounds(134, 103, 164, 21);
+		contentPane.add(pwdtext);
+		
+		idhint= new JLabel("New label");
+		idhint.setBounds(308, 58, 54, 15);
+		contentPane.add(idhint);
+		
+		pwdgint = new JLabel("New label");
+		pwdgint.setBounds(308, 106, 54, 15);
+		contentPane.add(pwdgint);
+		//µÇÂ¼
+		login = new JButton("µÇÂ¼");
+		login.setBounds(88, 168, 93, 23);
+		contentPane.add(login);
+		//×¢²á
+		register = new JButton("×¢²á");
+		register.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Register register = new Register();
+				register.setVisible(true);
+				Login.this.dispose();			
+			}
+		});
+		register.setBounds(241, 168, 93, 23);
+		contentPane.add(register);
+	}
+}

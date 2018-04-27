@@ -1,0 +1,56 @@
+package com.etc.punchyy.bizimpl;
+
+import java.util.List;
+
+import com.etc.punchyy.biz.CompBiz;
+import com.etc.punchyy.dao.CompDao;
+import com.etc.punchyy.daoimpl.CompDaoImpl;
+import com.etc.punchyy.entity.Comp;
+
+public class CompBizImpl implements CompBiz{
+	CompDao dao=new CompDaoImpl();
+
+	@Override
+	public boolean addMission(Comp comp) {
+	if("".equals(comp.getComp_reason())||comp.getComp_bad()==null && comp.getComp_mission()==null && comp.getComp_reason()==null){
+		return false
+				;}
+	return dao.addMission(comp);
+	}
+
+	@Override
+	public boolean delete(int id) {
+	if(id>0){
+		return dao.delete(id);}
+	return false;
+	}
+
+	@Override
+	public boolean updateCredit(int id, String credit) {
+	if(id>0){
+		return dao.updateCredit(id, credit);
+	}return false;
+	}
+
+	@Override
+	public Comp queryReasonByID(int id) {
+	if(id>0){
+		return dao.queryReasonByID(id);
+	}
+	return null;
+	}
+
+	@Override
+	public List<Comp> queryAll() {
+		return dao.queryAll();
+	}
+
+	@Override
+	public Comp queryCompByID(int id) {
+		if(id>0){
+			return dao.queryCompByID(id);
+		}
+		return null;
+	}
+
+}

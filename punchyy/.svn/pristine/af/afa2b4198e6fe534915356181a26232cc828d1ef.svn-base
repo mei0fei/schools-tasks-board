@@ -1,0 +1,56 @@
+package com.etc.punchyy.gui;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JScrollPane;
+
+import com.etc.punchyy.biz.MissionBiz;
+import com.etc.punchyy.bizimpl.MissionBizImpl;
+import com.etc.punchyy.entity.Mission;
+import com.etc.punchyy.util.FrameUtil;
+
+public class AdMission extends JFrame {
+	private JButton back,delete;
+	private MissionBiz misbiz=new MissionBizImpl();
+
+	private JPanel contentPane;
+	/**
+	 * Create the frame.
+	 */
+	public AdMission(Mission AM) {
+		FrameUtil.initFrame(this, 785, 352);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+	
+		contentPane.setLayout(null);
+		
+		delete = new JButton("É¾³ý¶©µ¥");
+		delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+		delete.setBounds(59, 270, 93, 23);
+		contentPane.add(delete);
+		
+		back = new JButton("·µ»Ø");
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		back.setBounds(569, 270, 93, 23);
+		contentPane.add(back);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 10, 749, 250);
+		contentPane.add(scrollPane);
+	}
+}

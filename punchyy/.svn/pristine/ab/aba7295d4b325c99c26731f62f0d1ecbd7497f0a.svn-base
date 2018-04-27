@@ -1,0 +1,174 @@
+package com.etc.punchyy.gui;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import com.etc.punchyy.entity.User;
+import com.etc.punchyy.util.FrameUtil;
+
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+public class UserWindow extends JFrame {
+
+	private JPanel contentPane;
+	private User user;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JTextField textField_4;
+	private JTextField textField_5;
+	private JLabel lblNewLabel_6;
+	private JTextField textField_6;
+	private JButton btnNewButton;
+	private JButton btnNewButton_1;
+	private JButton btnNewButton_2;
+	
+
+
+	/**
+	 * Create the frame.
+	 */
+	public UserWindow(User user) {
+		this.user=user;
+		FrameUtil.initFrame(this, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+		public void windowClosing(WindowEvent e) {
+		UserWindow.this.dispose();
+		}
+		});
+		
+		JLabel lblNewLabel = new JLabel("帐  号");
+		lblNewLabel.setBounds(46, 27, 54, 18);
+		contentPane.add(lblNewLabel);
+		
+		textField = new JTextField();
+		textField.setBounds(98, 24, 87, 21);
+		textField.setFocusable(false);
+		textField.setText(user.getUser_id()+"");
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("用户名");
+		lblNewLabel_1.setBounds(225, 27, 54, 15);
+		contentPane.add(lblNewLabel_1);
+		
+		textField_1 = new JTextField();
+		textField_1.setBounds(278, 24, 127, 21);
+		textField_1.setFocusable(false);
+		textField_1.setText(user.getUser_name());
+		contentPane.add(textField_1);
+		textField_1.setColumns(10);
+		
+		JLabel lblNewLabel_2 = new JLabel("性  别");
+		lblNewLabel_2.setBounds(46, 72, 54, 15);
+		contentPane.add(lblNewLabel_2);
+		
+		textField_2 = new JTextField();
+		textField_2.setBounds(98, 68, 87, 21);
+		textField_2.setFocusable(false);
+		textField_2.setText(user.getUser_sex());
+		contentPane.add(textField_2);
+		textField_2.setColumns(10);
+		
+		JLabel lblNewLabel_3 = new JLabel("电  话");
+		lblNewLabel_3.setBounds(225, 71, 54, 15);
+		contentPane.add(lblNewLabel_3);
+		
+		textField_3 = new JTextField();
+		textField_3.setBounds(278, 68, 127, 21);
+		textField_3.setFocusable(false);
+		textField_3.setText(user.getUser_tel()+"");
+		contentPane.add(textField_3);
+		textField_3.setColumns(10);
+		
+		JLabel lblNewLabel_4 = new JLabel("信用度");
+		lblNewLabel_4.setBounds(46, 119, 54, 15);
+		contentPane.add(lblNewLabel_4);
+		
+		textField_4 = new JTextField();
+		textField_4.setBounds(98, 115, 87, 21);
+		textField_4.setFocusable(false);
+		textField_4.setText(user.getUser_credit()+"");
+		contentPane.add(textField_4);
+		textField_4.setColumns(10);
+		
+		JLabel lblNewLabel_5 = new JLabel("所在地");
+		lblNewLabel_5.setBounds(225, 119, 54, 14);
+		contentPane.add(lblNewLabel_5);
+		
+		textField_5 = new JTextField();
+		textField_5.setBounds(278, 115, 127, 21);
+		textField_5.setFocusable(false);
+		textField_5.setText(user.getUser_addr());
+		contentPane.add(textField_5);
+		textField_5.setColumns(10);
+		
+		lblNewLabel_6 = new JLabel("余  额");
+		lblNewLabel_6.setBounds(46, 155, 54, 18);
+		contentPane.add(lblNewLabel_6);
+		
+		textField_6 = new JTextField();
+		textField_6.setBounds(98, 153, 87, 21);
+		String double_str = String.format("%.2f", user.getUser_money());
+		textField_6.setText(double_str);
+		textField_6.setFocusable(false);
+		textField_6.setText(user.getUser_money()+"");
+		contentPane.add(textField_6);
+		textField_6.setColumns(10);
+		
+		btnNewButton = new JButton("充值");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Recharge recharge=new Recharge(UserWindow.this.user);
+				recharge.setVisible(true);
+				UserWindow.this.dispose();
+			}
+		});
+		btnNewButton.setBounds(46, 184, 66, 23);
+		contentPane.add(btnNewButton);
+		
+		btnNewButton_1 = new JButton("提现");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Withdraw withdraw=new Withdraw(UserWindow.this.user);
+				withdraw.setVisible(true);
+				UserWindow.this.dispose();
+			}
+		});
+		btnNewButton_1.setBounds(119, 184, 66, 23);
+		contentPane.add(btnNewButton_1);
+		
+		btnNewButton_2 = new JButton("修改密码");
+		btnNewButton_2.addActionListener(new rePwd());
+		btnNewButton_2.setBounds(272, 184, 93, 23);
+		contentPane.add(btnNewButton_2);
+	}
+	
+	public class rePwd implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			NewPwd newPwd = new NewPwd(user);
+			newPwd.setVisible(true);
+		}		
+	}
+	
+	
+}

@@ -1,0 +1,170 @@
+package com.etc.punchyy.gui;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.JList;
+
+import com.etc.punchyy.entity.User;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class Home extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField userid;
+	private JLabel lblNewLabel_1;
+	private JTextField username;
+	private JLabel lblNewLabel_2;
+	private JTextField usersex;
+	private JLabel lblNewLabel_3;
+	private JTextField money;
+	private JButton btnNewButton;
+	private JButton btnNewButton_1;
+	private JScrollPane scrollPane;
+	private JButton btnNewButton_5;
+	private JButton btnNewButton_6;
+	private JTextField textField;
+	private JButton btnNewButton_7;
+	private User user;
+
+
+
+	/**
+	 * Create the frame.
+	 */
+	public Home(User user) {
+		this.user=user;
+		setTitle("主页面");
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 813, 584);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("帐  号");
+		lblNewLabel.setBounds(43, 34, 54, 15);
+		contentPane.add(lblNewLabel);
+		
+		userid = new JTextField();
+		userid.setBounds(24, 59, 87, 21);
+		contentPane.add(userid);
+		userid.setColumns(10);
+		
+		lblNewLabel_1 = new JLabel("姓  名");
+		lblNewLabel_1.setBounds(43, 105, 54, 15);
+		contentPane.add(lblNewLabel_1);
+		
+		username = new JTextField();
+		username.setBounds(24, 130, 87, 21);
+		contentPane.add(username);
+		username.setColumns(10);
+		
+		lblNewLabel_2 = new JLabel("性  别");
+		lblNewLabel_2.setBounds(43, 175, 54, 15);
+		contentPane.add(lblNewLabel_2);
+		
+		usersex = new JTextField();
+		usersex.setBounds(24, 200, 87, 21);
+		contentPane.add(usersex);
+		usersex.setColumns(10);
+		
+		lblNewLabel_3 = new JLabel("余  额");
+		lblNewLabel_3.setBounds(43, 245, 54, 15);
+		contentPane.add(lblNewLabel_3);
+		
+		money = new JTextField();
+		money.setBounds(24, 270, 87, 21);
+		contentPane.add(money);
+		money.setColumns(10);
+		
+		btnNewButton = new JButton("充  值");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Recharge recharge=new Recharge(Home.this .user);
+				recharge.setVisible(true);
+				Home.this.dispose();
+			}
+		});
+		btnNewButton.setBounds(23, 311, 88, 23);
+		contentPane.add(btnNewButton);
+		
+		btnNewButton_1 = new JButton("提  现");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Withdraw withdraw=new Withdraw();
+				withdraw.setVisible(true);
+				Home.this.dispose();
+			}
+		});
+		btnNewButton_1.setBounds(24, 344, 87, 23);
+		contentPane.add(btnNewButton_1);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(121, 59, 676, 487);
+		contentPane.add(scrollPane);
+		
+		JList list = new JList();
+		scrollPane.setViewportView(list);
+		
+		JButton btnNewButton_2 = new JButton("可领取的任务");
+		btnNewButton_2.setBounds(147, 30, 122, 23);
+		contentPane.add(btnNewButton_2);
+		
+		JButton btnNewButton_3 = new JButton("我发布的任务");
+		btnNewButton_3.setBounds(301, 30, 122, 23);
+		contentPane.add(btnNewButton_3);
+		
+		JButton btnNewButton_4 = new JButton("我领取的任务");
+		btnNewButton_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnNewButton_4.setBounds(447, 30, 122, 23);
+		contentPane.add(btnNewButton_4);
+		
+		btnNewButton_5 = new JButton("发布任务");
+		btnNewButton_5.setBounds(24, 408, 87, 23);
+		contentPane.add(btnNewButton_5);
+		
+		btnNewButton_6 = new JButton("修改密码");
+		btnNewButton_6.addActionListener(new rePwd());
+		btnNewButton_6.setBounds(24, 441, 87, 23);
+		contentPane.add(btnNewButton_6);
+		
+		textField = new JTextField();
+		textField.setBounds(605, 31, 87, 21);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		btnNewButton_7 = new JButton("查找");
+		btnNewButton_7.setBounds(702, 30, 93, 23);
+		contentPane.add(btnNewButton_7);
+		
+		JButton btnNewButton_8 = new JButton("举报投诉");
+		btnNewButton_8.setBounds(24, 477, 87, 23);
+		contentPane.add(btnNewButton_8);
+	}
+	
+	public class rePwd implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			NewPwd newPwd = new NewPwd(user);
+			newPwd.setVisible(true);
+		}
+		
+	}
+	
+	
+}

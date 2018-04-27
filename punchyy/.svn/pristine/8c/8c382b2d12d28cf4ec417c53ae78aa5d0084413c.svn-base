@@ -1,0 +1,67 @@
+package com.etc.punchyy.bizimpl;
+
+import java.util.List;
+
+import com.etc.punchyy.biz.MissionBiz;
+import com.etc.punchyy.dao.MissionDao;
+import com.etc.punchyy.daoimpl.MissionDaoImpl;
+import com.etc.punchyy.entity.Mission;
+import com.etc.punchyy.entity.User;
+
+public class MissionBizImpl implements MissionBiz{
+private MissionDao dao=new  MissionDaoImpl();
+	@Override
+	public boolean addMission(Mission mission) {
+		// TODO Auto-generated method stub
+		if(mission==null||"".equals(mission.getMission_detail())||"".equals(mission.getMission_name())||mission.getMission_reward()<0.0){
+			return false;
+		}
+		return dao.addMission(mission);
+	}
+	@Override
+	public List<Mission> serchGet(User user) {
+		// TODO Auto-generated method stub
+		return dao.serchGet(user);
+	}
+
+	@Override
+	public List<Mission> serchMy(User user) {
+		// TODO Auto-generated method stub
+		return dao.serchMy(user);
+	}
+
+	@Override
+	public List<Mission> serchLike(String key) {
+		// TODO Auto-generated method stub
+		if("".equals(key)||key.indexOf(" ")!=-1){
+			return null;
+		}
+		return dao.serchLike(key);
+	}
+
+	@Override
+	public boolean updateState(String state, int id) {
+		// TODO Auto-generated method stub
+		if(state.equals("完成中")||state.equals("已完成")||state.equals("未领取")&&id>0){
+		return dao.updateState(state, id);}
+		return false;
+	}
+
+	@Override
+	public List<Mission> serchAll() {
+		// TODO Auto-generated method stub
+		return dao.serchAll();
+	}
+
+	@Override
+	public List<Mission> serchUn(User user) {
+		// TODO Auto-generated method stub
+		return dao.serchUn(user);
+	}
+	@Override
+	public Mission serchById(int id) {
+		// TODO Auto-generated method stub
+		return dao.serchById(id);
+	}
+
+}

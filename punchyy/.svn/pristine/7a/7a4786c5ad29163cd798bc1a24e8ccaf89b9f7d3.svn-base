@@ -1,0 +1,8 @@
+package com.etc.punchyy.dao;
+
+public interface CompDao {
+
+	
+	
+	
+}

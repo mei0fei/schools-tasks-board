@@ -1,0 +1,134 @@
+package com.etc.punchyy.gui;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JButton;
+
+import com.etc.punchyy.biz.MissionBiz;
+import com.etc.punchyy.bizimpl.MissionBizImpl;
+import com.etc.punchyy.entity.Mission;
+import com.etc.punchyy.entity.User;
+import com.etc.punchyy.util.FrameUtil;
+
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.awt.Color;
+
+public class NewMission extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField textname,textMoney;
+	private JButton Button,back;
+	private User user;
+	private JLabel Label,Label1;
+	private JTextArea textArea;
+	MissionBiz biz=new MissionBizImpl();
+	Mission mission=new Mission();
+
+
+
+	/**
+	 * Create the frame.
+	 */
+	public NewMission(User user) {
+		setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		this.user=user;
+		setTitle("发布任务");
+		FrameUtil.initFrame(this, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		Label = new JLabel("任务名");
+		Label.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		Label.setBounds(14, 13, 54, 15);
+		contentPane.add(Label);
+		
+		textname = new JTextField();
+		textname.setBounds(14, 38, 406, 21);
+		contentPane.add(textname);
+		textname.setColumns(10);
+		
+		Label1 = new JLabel("任务详情（写明任务地点时间以及要求哦）");
+		Label1.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		Label1.setBounds(14, 61, 319, 21);
+		contentPane.add(Label1);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(14, 88, 406, 106);
+		contentPane.add(scrollPane);
+		
+		textArea = new JTextArea();
+		scrollPane.setViewportView(textArea);
+		
+		JLabel lblNewLabel_2 = new JLabel("报  酬");
+		lblNewLabel_2.setForeground(Color.BLACK);
+		lblNewLabel_2.setFont(new Font("微软雅黑", Font.PLAIN, 20));
+		lblNewLabel_2.setBounds(14, 207, 69, 35);
+		contentPane.add(lblNewLabel_2);
+		
+		textMoney = new JTextField();
+		textMoney.setFont(new Font("微软雅黑", Font.PLAIN, 20));
+		textMoney.setBounds(90, 207, 69, 35);
+		contentPane.add(textMoney);
+		textMoney.setColumns(10);
+		
+		Button = new JButton("发布");
+		Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mission.setMission_emper(NewMission.this.user);
+				mission.setMission_name(textname.getText());
+				mission.setMission_detail(textArea.getText());
+				mission.setMission_reward(Double.valueOf(textMoney.getText()));
+				FrameUtil.getWebsiteDatetime();
+				mission.setMission_time(FrameUtil.getWebsiteDatetime());
+				if(NewMission.this.user.getUser_credit()>0){
+					if(biz.addMission(NewMission.this.mission)){
+						JOptionPane.showMessageDialog(NewMission.this, "发布成功！");
+					}else{
+						JOptionPane.showMessageDialog(NewMission.this, "发布失败！");
+					}
+				}else {
+					JOptionPane.showMessageDialog(NewMission.this, "您的信用度过低");
+				}
+					
+				
+				Home home=new Home(NewMission.this.user);
+				home.setVisible(true);
+				NewMission.this.dispose();
+			}
+		});
+		Button.setFont(new Font("微软雅黑", Font.PLAIN, 20));
+		Button.setBounds(231, 207, 81, 35);
+		contentPane.add(Button);
+		
+		back = new JButton("返回");
+		back.setFont(new Font("微软雅黑", Font.PLAIN, 20));
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Home home=new Home(NewMission.this.user);
+				home.setVisible(true);
+				NewMission.this.dispose();
+			}
+		});
+		back.setBounds(337, 207, 81, 35);
+		contentPane.add(back);
+	}
+
+
+
+	protected static void showMessageDialog(NewMission newMission, String string) {
+		// TODO Auto-generated method stub
+		
+	}
+}

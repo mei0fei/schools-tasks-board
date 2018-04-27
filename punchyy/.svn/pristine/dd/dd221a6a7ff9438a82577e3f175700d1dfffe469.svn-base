@@ -1,0 +1,99 @@
+package com.etc.punchyy.gui;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import com.etc.punchyy.dao.CompDao;
+import com.etc.punchyy.daoimpl.CompDaoImpl;
+import com.etc.punchyy.entity.Comp;
+import com.etc.punchyy.entity.User;
+import javax.swing.JScrollPane;
+import javax.swing.JList;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JTable;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.util.Vector;
+
+public class Admin extends JFrame {
+
+	private JPanel contentPane;
+	private User user;
+	private JTable table;
+	private JScrollPane allinfo;//鼠标点击对应的信息
+	private JButton report,allmis,assessment,info,back;//全部反馈，全部任务信息，信用评估，用户信息
+	private String[] columName={"投诉编号","被投诉人","投诉人","部门电话"};
+	private Vector rowData;
+	/**
+	 * Create the frame.
+	 */
+	public Admin(User user) {
+		this.user=user;
+		setTitle("管理");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 569, 438);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		allinfo = new JScrollPane();
+		allinfo.setBounds(21, 31, 364, 325);
+		contentPane.add(allinfo);
+		
+		table = new JTable();
+		allinfo.setViewportView(table);
+		
+		report = new JButton("收到的投诉");
+		report.setBounds(32, 10, 116, 23);
+		final Comp comp=new Comp();
+		report.addActionListener(new ActionListener() {
+
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				DefaultTableModel a = new DefaultTableModel(columName, 0);
+				String id=String.valueOf(comp.getComp_id());
+				String bad=String.valueOf(comp.getComp_bad());
+				String mission=String.valueOf(comp.getComp_mission());
+				String reason=String.valueOf(comp.getComp_reason());
+				String time=String.valueOf(comp.getComp_time());
+				String[] re={id,bad,mission,reason,time};
+				a.addRow(re);
+				table.setModel(a);
+			allinfo.setVisible(true);
+			table.setVisible(true);	
+			}
+		});
+		contentPane.add(report);
+		
+		allmis = new JButton("所有任务");
+		allmis.setBounds(203, 10, 116, 23);
+		contentPane.add(allmis);
+		
+		assessment = new JButton("信用评估");
+		assessment.setBounds(406, 69, 106, 23);
+		contentPane.add(assessment);
+		
+		info = new JButton("用户信息");
+		info.setBounds(406, 151, 106, 23);
+		contentPane.add(info);
+		
+	    back = new JButton("退出");
+	    back.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent arg0) {
+	    		Admin.this.dispose();
+	    	}
+	    });
+	    back.setBounds(406, 333, 106, 23);
+		contentPane.add(back);
+	}
+}

@@ -1,0 +1,185 @@
+package com.etc.punchyy.gui;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JScrollPane;
+
+import com.etc.punchyy.biz.MissionBiz;
+import com.etc.punchyy.bizimpl.MissionBizImpl;
+import com.etc.punchyy.entity.Mission;
+import com.etc.punchyy.entity.User;
+import com.etc.punchyy.gui.Home.newmis;
+import com.etc.punchyy.util.FrameUtil;
+import javax.swing.JLabel;
+import java.awt.Font;
+
+public class AdMission extends JFrame {
+	private JButton back,re;
+	private MissionBiz misbiz=new MissionBizImpl();
+	private JTextField Missionid,Missionname,emperid,empertel,emp,reward;
+	private Mission mission;
+	private JLabel emper,Empertel,empwho,money,misdetail;
+	private JTextArea textArea;
+    private MissionBiz misb=new MissionBizImpl();
+	private JPanel contentPane;
+	private JLabel lblNewLabel;
+	private JTextField textField;
+	private User user;
+	/**
+	 * Create the frame.
+	 */
+	public AdMission(Mission AM,JButton refresh,User user) {
+		this.user=user;
+		setTitle("任务详情");
+		re=refresh;
+		mission=AM;
+		FrameUtil.initFrame(this, 450, 440);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+		public void windowClosing(WindowEvent e) {
+		Admin admin = new Admin(AdMission.this.user);
+		admin.setVisible(true);
+		AdMission.this.dispose();
+		}
+		});
+		
+		JLabel lblNewLabel_1 = new JLabel("任务名称");
+		lblNewLabel_1.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		lblNewLabel_1.setBounds(37, 38, 67, 15);
+		contentPane.add(lblNewLabel_1);
+		
+		Missionname = new JTextField();
+		Missionname.setBounds(114, 35, 96, 25);
+		Missionname.setText(AM.getMission_name());
+		Missionname.setFocusable(false);
+		contentPane.add(Missionname);
+		Missionname.setColumns(10);
+		
+		emper = new JLabel("\u53D1  \u5E03  \u4EBA");
+		emper.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		emper.setBounds(37, 75, 67, 15);
+		contentPane.add(emper);
+		
+		emperid = new JTextField();
+		emperid.setBounds(114, 72, 96, 25);
+		emperid.setText(mission.getMission_emper().getUser_name());
+		emperid.setFocusable(false);
+		contentPane.add(emperid);
+		emperid.setColumns(10);
+		
+		Empertel = new JLabel("联系方式");
+		Empertel.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		Empertel.setBounds(220, 75, 65, 15);
+		contentPane.add(Empertel);
+		
+		empertel = new JTextField();
+		empertel.setBounds(295, 72, 96, 25);
+		empertel.setText(mission.getMission_emper().getUser_tel());
+		empertel.setFocusable(false);
+		contentPane.add(empertel);
+		empertel.setColumns(10);
+		
+		empwho = new JLabel("\u53D7  \u96C7  \u4EBA");
+		empwho.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		empwho.setBounds(37, 116, 67, 15);
+		contentPane.add(empwho);
+		
+		emp = new JTextField();
+		emp.setBounds(114, 113, 96, 25);
+		if(mission.getMission_emp()==null){
+			emp.setText("尚未有人领取");
+		}else{
+			emp.setText(mission.getMission_emp().getUser_name());
+		}
+		
+		emp.setFocusable(false);
+		contentPane.add(emp);
+		emp.setColumns(10);
+		
+		money = new JLabel("  \u8D4F    \u91D1");
+		money.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		money.setBounds(220, 116, 65, 15);
+		contentPane.add(money);
+		
+		reward = new JTextField();
+		reward.setBounds(295, 113, 96, 25);
+		String double_str = String.format("%.2f", mission.getMission_reward());
+		reward.setText(double_str);
+		reward.setFocusable(false);
+		contentPane.add(reward);
+		reward.setColumns(10);
+		
+		misdetail = new JLabel("任务描述(任务发布时间:"+mission.getMission_time()+")");
+		misdetail.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		misdetail.setBounds(50, 156, 341, 15);
+		contentPane.add(misdetail);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(50, 181, 343, 114);
+		contentPane.add(scrollPane);
+		textArea = new JTextArea();
+		textArea.setText(mission.getMission_detail());
+		textArea.setFocusable(false);
+		scrollPane.setViewportView(textArea);
+		
+		back = new JButton("删除");
+		back.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int option= JOptionPane.showConfirmDialog(AdMission.this, "是否要删除该任务？ ", "提示 ",JOptionPane.YES_NO_CANCEL_OPTION);
+				if(option==JOptionPane.YES_OPTION){
+				misb.deleteMission(mission.getMission_id());
+				re.doClick();				
+				AdMission.this.dispose();
+				Admin admin = new Admin(AdMission.this.user);
+				}				
+			}
+		});
+		back.setBounds(95, 319, 87, 23);
+		contentPane.add(back);
+		
+		lblNewLabel = new JLabel("领取状态");
+		lblNewLabel.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		lblNewLabel.setBounds(218, 38, 67, 15);
+		contentPane.add(lblNewLabel);
+		
+		textField = new JTextField();
+		textField.setBounds(295, 35, 96, 25);
+		textField.setFocusable(false);
+		textField.setText(mission.getMission_state());
+		contentPane.add(textField);
+		
+		JButton btnNewButton = new JButton("\u53D6\u6D88");
+		btnNewButton.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Admin admin = new Admin(AdMission.this.user);
+				AdMission.this.dispose();
+			}
+		});
+		btnNewButton.setBounds(242, 319, 93, 23);
+		contentPane.add(btnNewButton);
+		
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+			AdMission.this.dispose();
+			}
+			});
+	}
+}

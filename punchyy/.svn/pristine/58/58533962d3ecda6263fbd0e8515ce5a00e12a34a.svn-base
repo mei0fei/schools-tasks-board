@@ -1,0 +1,56 @@
+package com.etc.punchyy.daoimpl;
+
+import java.sql.ResultSet;
+
+import com.etc.punchyy.biz.UserBiz;
+import com.etc.punchyy.bizimpl.UserBizImpl;
+import com.etc.punchyy.dao.CompDao;
+import com.etc.punchyy.dao.MissionDao;
+import com.etc.punchyy.dao.UserDao;
+import com.etc.punchyy.entity.Comp;
+
+
+public class CompDaoImpl implements CompDao{
+
+	@Override
+	public boolean addMission(Comp comp) {
+	int i=util.update("insert into t_Comp(Comp_bad,Comp_mission,Comp_reason,comp_addr) values(?,?,?,?) ",comp.getComp_bad(),comp.getComp_mission(),comp.getComp_reason(),comp.getComp_time());
+		return i>0;
+	}
+
+	@Override
+	public boolean delete(int id) {
+		return util.update("delete from t_Comp where Comp_id=?", id)>0;
+	}
+
+	@Override
+	public boolean updateCredit(int id, String credit) {
+		return util.update("update t_Comp set User_credit where User_id=?",credit,id)>0;
+	}
+
+
+	@Override
+	public Comp queryReasonByID(int id) {
+	ResultSet rs=util.query("select Comp_reason from t_comp where Comp_id=?", id);
+	Comp comp=null;
+	try {
+		if(rs.next()){
+			comp=new Comp();
+			comp.setComp_reason(rs.getString("Comp_reason"));	
+			comp.setComp_time(rs.getString("comp_time"));
+			UserDao userDao = new UserDaoImpl();
+			int bad = rs.getInt("comp_bad");
+			comp.setComp_bad(userDao.queryUserById(bad));
+			MissionDao missionDao = new MissionDaoImpl();
+			int missionId = rs.getInt("comp_mission");
+
+		}
+	} catch (Exception e) {
+		e.printStackTrace();
+	}finally{
+		util.closeAll();
+		
+	}
+		return comp;
+	}
+}

@@ -1,0 +1,17 @@
+package com.etc.punchyy.biz;
+
+import com.etc.punchyy.entity.Comp;
+import com.etc.punchyy.util.JDBCUtil;
+
+public interface Compbiz {
+	JDBCUtil util=new JDBCUtil();
+	//添加反馈
+public boolean addMission(Comp comp);
+    //删除反馈
+public boolean delete(int id);
+    //扣除信誉度
+public boolean updateCredit(int id,String credit);
+   //通过反馈单ID查询出反馈单内容
+public Comp queryReasonByID(int id);
+
+}

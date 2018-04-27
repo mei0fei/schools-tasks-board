@@ -1,0 +1,55 @@
+package com.etc.punchyy.bizimpl;
+
+import java.util.List;
+
+import com.etc.punchyy.biz.MissionBiz;
+import com.etc.punchyy.dao.MissionDao;
+import com.etc.punchyy.daoimpl.MissionDaoImpl;
+import com.etc.punchyy.entity.Mission;
+import com.etc.punchyy.entity.User;
+
+public class MissionBizImpl implements MissionBiz{
+private MissionDao dao=new  MissionDaoImpl();
+	@Override
+	public boolean addMission(Mission mission) {
+		// TODO Auto-generated method stub
+		return dao.addMission(mission);
+	}
+
+	@Override
+	public List<Mission> serchGet(User user) {
+		// TODO Auto-generated method stub
+		return dao.serchGet(user);
+	}
+
+	@Override
+	public List<Mission> serchMy(User user) {
+		// TODO Auto-generated method stub
+		return dao.serchMy(user);
+	}
+
+	@Override
+	public List<Mission> serchLike(String key) {
+		// TODO Auto-generated method stub
+		return dao.serchLike(key);
+	}
+
+	@Override
+	public boolean updateState(String state, int id) {
+		// TODO Auto-generated method stub
+		return dao.updateState(state, id);
+	}
+
+	@Override
+	public List<Mission> serchAll() {
+		// TODO Auto-generated method stub
+		return dao.serchAll();
+	}
+
+	@Override
+	public List<Mission> serchUn() {
+		// TODO Auto-generated method stub
+		return dao.serchUn();
+	}
+
+}

@@ -1,0 +1,338 @@
+package com.etc.punchyy.gui;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JLabel;
+import javax.swing.JPopupMenu;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.JList;
+
+import com.etc.punchyy.biz.MissionBiz;
+import com.etc.punchyy.biz.UserBiz;
+import com.etc.punchyy.bizimpl.MissionBizImpl;
+import com.etc.punchyy.bizimpl.UserBizImpl;
+import com.etc.punchyy.entity.Mission;
+import com.etc.punchyy.entity.User;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.util.List;
+
+import javax.swing.JTable;
+
+public class Home extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField userid;
+	private JLabel lblNewLabel_1;
+	private JTextField username;
+	private JLabel lblNewLabel_2;
+	private JTextField usersex;
+	private JLabel lblNewLabel_3;
+	private JTextField money;
+	private JButton btnNewButton;
+	private JButton btnNewButton_1;
+	private JScrollPane scrollPane;
+	private JButton btnNewButton_5;
+	private JButton btnNewButton_6;
+	private JTextField textField;
+	private JButton btnNewButton_7;
+	private User user;
+	private JTable table;
+	private DefaultTableModel tableModel;
+	private UserBiz userBiz = new UserBizImpl();
+	private MissionBiz missionBiz = new MissionBizImpl();
+	private String[] columName={"任务单号","委托人","任务名","任务报酬"};
+	private String[] mymsiName = {"任务单号","任务名","任务报酬","领取人","状态"};
+	private String[] mygetName = {"任务单号","任务名","任务报酬","状态"};
+	private JPopupMenu popupMenu;
+
+
+	/**
+	 * Create the frame.
+	 */
+	public Home(User user) {
+		
+		popupMenu=new JPopupMenu();
+		
+		this.user=user;
+		setTitle(user.getUser_addr()+"任务栏");
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 813, 584);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("帐  号");
+		lblNewLabel.setBounds(24, 34, 54, 15);
+		contentPane.add(lblNewLabel);
+		
+		userid = new JTextField();
+		userid.setBounds(10, 58, 87, 21);
+		userid.setText(user.getUser_id()+"");
+		userid.setFocusable(false);	
+		contentPane.add(userid);
+		userid.setColumns(10);
+		
+		lblNewLabel_1 = new JLabel("姓  名");
+		lblNewLabel_1.setBounds(24, 105, 54, 15);
+		contentPane.add(lblNewLabel_1);
+		
+		username = new JTextField();
+		username.setBounds(10, 131, 87, 21);
+		username.setText(user.getUser_name());
+		username.setFocusable(false);
+		contentPane.add(username);
+		username.setColumns(10);
+		
+		lblNewLabel_2 = new JLabel("性  别");
+		lblNewLabel_2.setBounds(24, 175, 54, 15);
+		contentPane.add(lblNewLabel_2);
+		
+		usersex = new JTextField();
+		usersex.setBounds(10, 200, 87, 21);
+		usersex.setText(user.getUser_sex());
+		usersex.setFocusable(false);
+		contentPane.add(usersex);
+		usersex.setColumns(10);
+		
+		lblNewLabel_3 = new JLabel("余  额");
+		lblNewLabel_3.setBounds(24, 245, 54, 15);
+		contentPane.add(lblNewLabel_3);
+		
+		money = new JTextField();
+		money.setBounds(10, 268, 87, 21);
+		String double_str = String.format("%.2f", user.getUser_money());
+		money.setText(double_str);
+		money.setFocusable(false);
+		contentPane.add(money);
+		money.setColumns(10);
+		
+		btnNewButton = new JButton("充  值");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Recharge recharge=new Recharge(Home.this .user);
+				recharge.setVisible(true);
+				Home.this.dispose();
+			}
+		});
+		btnNewButton.setBounds(10, 311, 88, 23);
+		contentPane.add(btnNewButton);
+		
+		btnNewButton_1 = new JButton("提  现");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Withdraw withdraw=new Withdraw(Home.this.user);
+				withdraw.setVisible(true);
+				Home.this.dispose();
+			}
+		});
+		btnNewButton_1.setBounds(10, 347, 87, 23);
+		contentPane.add(btnNewButton_1);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(121, 59, 676, 487);
+		contentPane.add(scrollPane);		
+		tableModel = new DefaultTableModel(); 
+		table = new JTable(tableModel){
+			 public boolean isCellEditable(int row, int column)
+             {
+                        return false;//表格不允许被编辑
+             }
+		};		
+		table.getTableHeader().setReorderingAllowed(false);   //不可整列移动   
+		table.getTableHeader().setResizingAllowed(false);   //不可拉动表格		
+		List<Mission> list = missionBiz.serchUn(user);
+		String[][] data=new String[list.size()][columName.length];
+		//"任务单号","委托人","任务名","任务报酬"    未领取  完成中  已完成
+		for (int i = 0; i < list.size(); i++) {
+			for (int j = 0; j < columName.length; j++) {
+				if(j==0){
+					data[i][j]=list.get(i).getMission_id()+"";
+				}
+				if(j==1){
+					data[i][j]=list.get(i).getMission_emper().getUser_name()+"";
+				}
+				if(j==2){
+					data[i][j]=list.get(i).getMission_name()+"";
+				}
+				if(j==3){
+					data[i][j]=list.get(i).getMission_reward()+"";
+				}
+			}
+		}
+		//获取table适配器
+	    DefaultTableModel dtm=(DefaultTableModel) table.getModel();
+		dtm.setDataVector(data, columName);
+		scrollPane.setViewportView(table);
+		
+		JButton btnNewButton_2 = new JButton("可领取的任务");
+		btnNewButton_2.addActionListener(new missionun());
+		btnNewButton_2.setBounds(147, 30, 122, 23);
+		contentPane.add(btnNewButton_2);
+		
+		JButton btnNewButton_3 = new JButton("我发布的任务");
+		btnNewButton_3.addActionListener(new mymission());
+		btnNewButton_3.setBounds(301, 30, 122, 23);
+		contentPane.add(btnNewButton_3);
+		
+		JButton btnNewButton_4 = new JButton("我领取的任务");
+		btnNewButton_4.addActionListener(new myGet());
+		btnNewButton_4.setBounds(447, 30, 122, 23);
+		contentPane.add(btnNewButton_4);
+		
+		btnNewButton_5 = new JButton("发布任务");
+		btnNewButton_5.addActionListener(new newmis());
+		btnNewButton_5.setBounds(10, 406, 87, 23);
+		contentPane.add(btnNewButton_5);
+		
+		btnNewButton_6 = new JButton("修改密码");
+		btnNewButton_6.addActionListener(new rePwd());
+		btnNewButton_6.setBounds(10, 444, 87, 23);
+		contentPane.add(btnNewButton_6);
+		
+		textField = new JTextField();
+		textField.setBounds(605, 31, 87, 21);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		btnNewButton_7 = new JButton("查找");
+		btnNewButton_7.setBounds(702, 30, 93, 23);
+		contentPane.add(btnNewButton_7);
+		JButton btnNewButton_8 = new JButton("举报投诉");
+		btnNewButton_8.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Complain c=new Complain(Home.this.user);
+				c.setVisible(true);
+				Home.this.dispose();
+			}
+		});
+		btnNewButton_8.setBounds(10, 477, 87, 23);
+		contentPane.add(btnNewButton_8);
+	}
+	
+	public class rePwd implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			NewPwd newPwd = new NewPwd(user);
+			newPwd.setVisible(true);
+		}		
+	}
+	
+	public class newmis implements ActionListener{
+		public void actionPerformed(ActionEvent arg0) {
+			NewMission newMission = new NewMission(user);
+			newMission.setVisible(true);
+			Home.this.dispose();
+		}
+		
+	}
+	
+	public class missionun implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			List<Mission> list = missionBiz.serchUn(user);
+			String[][] data=new String[list.size()][columName.length];
+			//"任务单号","委托人","任务名","任务报酬"    未领取  完成中  已完成
+			for (int i = 0; i < list.size(); i++) {
+				for (int j = 0; j < columName.length; j++) {
+					if(j==0){
+						data[i][j]=list.get(i).getMission_id()+"";
+					}
+					if(j==1){
+						data[i][j]=list.get(i).getMission_emper().getUser_name()+"";
+					}
+					if(j==2){
+						data[i][j]=list.get(i).getMission_name()+"";
+					}
+					if(j==3){
+						data[i][j]=list.get(i).getMission_reward()+"";
+					}
+				}
+			}
+			//获取table适配器
+		    DefaultTableModel dtm=(DefaultTableModel) table.getModel();
+			dtm.setDataVector(data, columName);
+		}	
+	}
+	
+	public class mymission implements ActionListener{
+		//我发布的任务按钮监听
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			List<Mission> list = missionBiz.serchMy(user);
+			String[][] data=new String[list.size()][mymsiName.length];
+			//"任务单号","任务名","任务报酬","领取人","状态"    未领取  完成中  已完成
+			for (int i = 0; i < list.size(); i++) {
+				for (int j = 0; j < mymsiName.length; j++) {
+					if(j==0){
+						data[i][j]=list.get(i).getMission_id()+"";
+					}
+					if(j==1){
+						data[i][j]=list.get(i).getMission_name()+"";			
+					}
+					if(j==2){
+						data[i][j]=list.get(i).getMission_reward()+"";
+					}
+					if(j==3){
+						if(list.get(i).getMission_emp()==null){
+							data[i][j]="";
+						}else {
+							data[i][j]=list.get(i).getMission_emp().getUser_name()+"";
+						}
+
+					}
+					if(j==4){
+						data[i][j]=list.get(i).getMission_state()+"";
+					}
+				}
+			}
+			//获取table适配器
+		    DefaultTableModel dtm=(DefaultTableModel) table.getModel();
+			dtm.setDataVector(data, mymsiName);
+		}
+	}
+
+	public class myGet implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			List<Mission> list = missionBiz.serchGet(user);
+			String[][] data=new String[list.size()][mygetName.length];
+			//"任务单号","任务名","任务报酬","状态"    未领取  完成中  已完成
+			for (int i = 0; i < list.size(); i++) {
+				for (int j = 0; j < mygetName.length; j++) {
+					if(j==0){
+						data[i][j]=list.get(i).getMission_id()+"";
+					}
+					if(j==1){
+						data[i][j]=list.get(i).getMission_name()+"";			
+					}
+					if(j==2){
+						data[i][j]=list.get(i).getMission_reward()+"";
+					}
+					if(j==3){
+						data[i][j]=list.get(i).getMission_state()+"";
+					}
+					
+				}
+			}
+			//获取table适配器
+		    DefaultTableModel dtm=(DefaultTableModel) table.getModel();
+			dtm.setDataVector(data, mygetName);
+		}
+	}
+	 
+     
+	
+}

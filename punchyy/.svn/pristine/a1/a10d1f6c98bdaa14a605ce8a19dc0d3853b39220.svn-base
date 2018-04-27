@@ -1,0 +1,88 @@
+package com.etc.punchyy.bizimpl;
+
+import com.etc.punchyy.biz.UserBiz;
+import com.etc.punchyy.dao.UserDao;
+import com.etc.punchyy.daoimpl.UserDaoImpl;
+import com.etc.punchyy.entity.User;
+
+public class UserBizImpl implements UserBiz{
+
+	UserDao dao=new UserDaoImpl();
+	
+	@Override
+	public User login(int id, String pwd) {
+		if (id<0||pwd==null||pwd.equals("")) {
+			return null;
+		} else {
+			return dao.login(id, pwd);
+		}
+	}
+
+	@Override
+	public boolean register(User user) {
+
+		if (user.equals("")) {
+			return false;
+		} 
+		if (user.getUser_name()==null) {
+			return false;
+		}
+		if (user.getUser_name().indexOf(" ")>0) {
+			return false;
+		}
+		if(user.getUser_pwd()==null){
+			return false;
+		}
+		if(user.getUser_tel()==null){
+			return false;
+		}
+		return dao.register(user);
+	}
+
+	@Override
+	public boolean updateCreditById(int id, int credit) {
+		if(credit<0||credit>5){
+			return false;
+		}
+		return dao.updateCreditById(id, credit);
+	}
+
+	@Override
+	public User queryUserById(int id) {
+		if(id<10001){
+			return null;
+		}
+		return dao.queryUserById(id);
+	}
+
+	@Override
+	public boolean rechargeMoneyById(User user, double money) {
+		if(money<=0){
+			return false;
+		}
+		return dao.rechargeMoneyById(user, money);
+	}
+
+	@Override
+	public boolean withdrawMoneyById(User user, double money) {
+		if(money<=0){
+		return false;
+		}
+		if(money>user.getUser_money()){
+			return false;
+		}
+		return dao.withdrawMoneyById(user, money);
+	}
+
+	@Override
+	public User queryUserByName(String name) {
+		if (name==null) {
+			return null;
+		}
+		if (name.indexOf(" ")>0) {
+			return null;
+		}
+		return dao.queryUserByName(name);
+	}
+
+}

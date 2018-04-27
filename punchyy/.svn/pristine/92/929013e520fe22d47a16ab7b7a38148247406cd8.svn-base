@@ -1,0 +1,19 @@
+package com.etc.punchyy.dao;
+
+import com.etc.punchyy.entity.User;
+
+public interface UserDao {
+	
+	//登录
+	public User login(int id,String pwd);
+	
+	//注册
+	public boolean register(User user);
+	
+	//充值、提现
+	public boolean updateMoneyById(int id,double money);
+	
+	//修改信用度
+	public boolean updateCreditById(int id,int credit);
+	
+}

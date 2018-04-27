@@ -1,0 +1,9 @@
+package com.etc.punchyy.dao;
+
+import com.etc.punchyy.entity.User;
+
+public interface UserDao {
+
+	public User login();
+	
+}
